@@ -1,44 +1,29 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
-
-const DISHES = [
-  {
-    id: "1",
-    name: "Doro Wat",
-    price: "450 ETB",
-    desc: "Spicy chicken stew served with boiled egg and Injera.",
-  },
-  {
-    id: "2",
-    name: "Beyaynetu",
-    price: "250 ETB",
-    desc: "Assorted vegan stews served on a large Injera platter.",
-  },
-  {
-    id: "3",
-    name: "Kitfo",
-    price: "500 ETB",
-    desc: "Minced raw beef seasoned with mitmita and niter kibbeh.",
-  },
-];
+import { getDish, getDishes } from "../data";
+import AddToCartButton from "./AddToCartButton";
 
 export async function generateStaticParams() {
-  return DISHES.map((dish) => ({
-    id: dish.id,
-  }));
+  const dishes = await getDishes();
+  return dishes.map((dish) => ({ id: dish.id }));
 }
 
 export default async function DishPage({ params }) {
   const { id } = await params;
-  const dish = DISHES.find((d) => d.id === id);
+  const dish = await getDish(id);
 
-  if (!dish) return notFound();
+  if (!dish) notFound();
 
   return (
-    <div>
+    <article className="dish-detail">
+      <span className="badge">{dish.category}</span>
       <h1>{dish.name}</h1>
       <p>{dish.desc}</p>
-      <span>{dish.price}</span>
-      <button>Add to Cart</button>
-    </div>
+      <p className="price">{dish.price}</p>
+      <AddToCartButton dish={dish} />
+      <p>
+        <Link href="/menu">Back to menu</Link>
+      </p>
+    </article>
   );
 }

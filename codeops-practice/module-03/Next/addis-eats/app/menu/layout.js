@@ -1,27 +1,33 @@
 import Link from "next/link";
+import { categories } from "./categories";
+import { getDishes } from "./data";
 
-export default function MenuLayout({ children }) {
-  const categories = [
-    { id: "all", name: "All Dishes" },
-    { id: "injera", name: "Injera Specials" },
-    { id: "vegan", name: "Fasting / Beyaynetu" },
-    { id: "drinks", name: "Traditional Drinks" },
-  ];
+export default async function MenuLayout({ children }) {
+  const dishes = await getDishes();
+  const groups = categories.filter((c) => c !== "All");
 
   return (
-    <div>
-      <aside>
+    <div className="menu-layout">
+      <aside className="sidebar">
         <h2>Categories</h2>
-        <ul>
-          {categories.map((cat) => (
-            <li key={cat.id}>
-              <Link href={`/menu?category=${cat.id}`}>{cat.name}</Link>
-            </li>
-          ))}
-        </ul>
+        {groups.map((cat) => (
+          <div key={cat} className="sidebar-group">
+            <h3>{cat}</h3>
+            <ul>
+              {dishes
+                .filter((d) => d.category === cat)
+                .map((d) => (
+                  <li key={d.id}>
+                    <Link href={`/menu/${d.id}`}>{d.name}</Link>
+                  </li>
+                ))}
+            </ul>
+          </div>
+        ))}
+        <Link href="/menu" className="sidebar-all">All dishes</Link>
       </aside>
 
-      <section>{children}</section>
+      <section className="menu-content">{children}</section>
     </div>
   );
 }

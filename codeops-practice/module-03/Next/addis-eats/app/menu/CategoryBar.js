@@ -6,9 +6,15 @@ export default function CategoryBar({
   onSelectCategory,
 }) {
   return (
-    <div>
+    <div className="category-bar" role="group" aria-label="Filter by category">
       {categories.map((cat) => (
-        <button key={cat} onClick={() => onSelectCategory(cat)}>
+        <button
+          key={cat}
+          type="button"
+          className={cat === activeCategory ? "chip chip-active" : "chip"}
+          aria-pressed={cat === activeCategory}
+          onClick={() => onSelectCategory(cat)}
+        >
           {cat}
         </button>
       ))}

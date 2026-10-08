@@ -1,5 +1,6 @@
 import "./globals.css";
 import Link from "next/link";
+import { Providers } from "./providers";
 
 export const metadata = {
   title: "Addis Eats",
@@ -8,21 +9,26 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        <header>
-          <Link href="/">Addis Eats</Link>
-          <nav>
-            <Link href="/menu">Menu</Link>
-            <Link href="/checkout">Checkout</Link>
-          </nav>
-        </header>
+        <Providers>
+          <header className="site-header">
+            <Link href="/" className="brand">
+              Addis Eats
+            </Link>
+            <nav>
+              <Link href="/menu">Menu</Link>
+              <Link href="/cart">Cart</Link>
+              <Link href="/checkout">Checkout</Link>
+            </nav>
+          </header>
 
-        <main>{children}</main>
+          <main className="site-main">{children}</main>
 
-        <footer>
-          <p>© Addis Eats</p>
-        </footer>
+          <footer className="site-footer">
+            <p>© Addis Eats</p>
+          </footer>
+        </Providers>
       </body>
     </html>
   );
